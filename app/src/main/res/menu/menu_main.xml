@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="me.ravindrabarthwal.inserve.MainActivity">
+    <item
+        android:id="@+id/action_modify_quantity"
+        android:orderInCategory="100"
+        android:title="Modify Quantity"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_order"
+        android:orderInCategory="100"
+        android:title="Order"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="100"
+        android:title="Delete"
+        app:showAsAction="never" />
+</menu>

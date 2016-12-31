@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">InServe</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_product_detail">Product Details</string>
+    <string name="price_tag">Price: </string>
+    <string name="quantity_tag">Quantity: </string>
+    <string name="sale_tag">Sale</string>
+    <string name="supplier_tag">Supplier:</string>
+    <string name="name_tag">Name:</string>
+    <string name="add_product">Add Product</string>
+</resources>
