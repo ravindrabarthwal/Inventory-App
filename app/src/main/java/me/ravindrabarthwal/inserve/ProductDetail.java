@@ -179,7 +179,6 @@ public class ProductDetail extends AppCompatActivity implements LoaderManager.Lo
             stringImageUri = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.IMAGE));
             id = cursor.getInt(cursor.getColumnIndex(ProductEntry.ID));
 
-            Log.e("ImagePath",stringImageUri);
 
             nameTextView.setText(name);
             supplierTextView.setText(supplier);
