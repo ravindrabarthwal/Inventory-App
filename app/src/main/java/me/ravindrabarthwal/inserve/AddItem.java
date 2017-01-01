@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,10 @@ import me.ravindrabarthwal.inserve.data.InServeDbHelper;
 
 public class AddItem extends AppCompatActivity{
 
+    private ImageView image;
+    private int IMAGE_PICK = 1;
+    Uri imgUri;
+    String imgPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +47,25 @@ public class AddItem extends AppCompatActivity{
             }
         });
 
+        image = (ImageView) findViewById(R.id.image_add);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
 
+                startActivityForResult(Intent.createChooser(intent,"Select an image"), IMAGE_PICK);
+            }
+        });
 
+    }
+
+    public void onActivityResult(int requestCode, int resultCode,Intent intent) {
+        if(resultCode == RESULT_OK && requestCode == IMAGE_PICK) {
+            imgUri = intent.getData();
+            image.setImageURI(imgUri);
+        }
     }
 
     private void addProduct(){
@@ -55,6 +78,7 @@ public class AddItem extends AppCompatActivity{
         String supplier = supplierEditText.getText().toString().trim();
         String price = priceEditText.getText().toString().trim();
         String quantity = quantityEditText.getText().toString().trim();
+        String imageUri = imgUri.toString();
 
 
 
@@ -73,6 +97,7 @@ public class AddItem extends AppCompatActivity{
                 values.put(ProductEntry.PRICE,priceInt);
                 values.put(ProductEntry.QUANTITY,quantityInt);
                 values.put(ProductEntry.SUPPLIER,supplier);
+                values.put(ProductEntry.IMAGE,imageUri);
 
                 Uri newUri = getContentResolver().insert(ProductEntry.CONTENT_URI,values);
 

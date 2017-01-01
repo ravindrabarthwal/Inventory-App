@@ -1,11 +1,16 @@
 package me.ravindrabarthwal.inserve;
 
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
@@ -14,11 +19,19 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
 
 import me.ravindrabarthwal.inserve.data.InServeContract;
 import me.ravindrabarthwal.inserve.data.InServeContract.ProductEntry;
@@ -33,6 +46,8 @@ public class ProductDetail extends AppCompatActivity implements LoaderManager.Lo
     private String supplier;
     private String quantity;
     private String price;
+    private String stringImageUri;
+    ImageView imageView;
     private int id;
 
     private Uri currentProductUri;
@@ -104,7 +119,6 @@ public class ProductDetail extends AppCompatActivity implements LoaderManager.Lo
                 }
             }
         });
-
         // Create and show the AlertDialog
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
@@ -156,19 +170,60 @@ public class ProductDetail extends AppCompatActivity implements LoaderManager.Lo
             supplierTextView = (TextView) findViewById(R.id.supplier);
             priceTextView = (TextView) findViewById(R.id.price);
             quantityTextView = (TextView) findViewById(R.id.quantity);
+            imageView = (ImageView) findViewById(R.id.image_product_detail);
 
             name = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.NAME));
             supplier = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.SUPPLIER));
             price = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.PRICE));
             quantity = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.QUANTITY));
+            stringImageUri = cursor.getString(cursor.getColumnIndexOrThrow(ProductEntry.IMAGE));
             id = cursor.getInt(cursor.getColumnIndex(ProductEntry.ID));
+
+            Log.e("ImagePath",stringImageUri);
 
             nameTextView.setText(name);
             supplierTextView.setText(supplier);
             priceTextView.setText("$"+price);
             quantityTextView.setText(quantity);
+            if(stringImageUri == null) {
+                imageView.setImageResource(R.drawable.placeholder);
+            }else {
+                try {
+                    imageView.setImageBitmap(getBitmapFromUri(Uri.parse(stringImageUri)));
+                }catch(Exception e) {
+                    throw new IllegalArgumentException("Unable to parse image uri." + e);
+                }
+            }
+            Button btn = (Button) findViewById(R.id.btn_sale);
+            final int quantityInt = Integer.parseInt(quantity);
+            if(quantityInt < 10){
+                quantityTextView.setTextColor(Color.parseColor("red"));
+            }
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(quantityInt > 0) {
+                        int newQuantity = quantityInt - 1;
+                        ContentValues values = new ContentValues();
+                        values.put(ProductEntry.QUANTITY, newQuantity);
+                        Uri currentProductUri = ContentUris.withAppendedId(ProductEntry.CONTENT_URI, id);
+
+                        int rowsAffected = getContentResolver().update(currentProductUri, values, null, null);
+                        if (rowsAffected == 0) {
+                            Toast.makeText(getBaseContext(), "Error updating the quantity.", Toast.LENGTH_LONG).show();
+                        }
+
+
+                    }else {
+                        Toast.makeText(getBaseContext(), "The stock is already zero.", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
         }
     }
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -176,5 +231,55 @@ public class ProductDetail extends AppCompatActivity implements LoaderManager.Lo
         supplierTextView.setText("");
         priceTextView.setText("");
         quantityTextView.setText("");
+    }
+
+    public Bitmap getBitmapFromUri(Uri uri) {
+
+        if (uri == null || uri.toString().isEmpty())
+            return null;
+
+        // Get the dimensions of the View
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+        InputStream input = null;
+        try {
+            input = this.getContentResolver().openInputStream(uri);
+
+            // Get the dimensions of the bitmap
+            BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            bmOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, bmOptions);
+            input.close();
+
+            int photoW = bmOptions.outWidth;
+            int photoH = bmOptions.outHeight;
+
+            // Determine how much to scale down the image
+            int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+            // Decode the image file into a Bitmap sized to fill the View
+            bmOptions.inJustDecodeBounds = false;
+            bmOptions.inSampleSize = scaleFactor;
+            bmOptions.inPurgeable = true;
+
+            input = this.getContentResolver().openInputStream(uri);
+            Bitmap bitmap = BitmapFactory.decodeStream(input, null, bmOptions);
+            input.close();
+            return bitmap;
+
+        } catch (FileNotFoundException fne) {
+            Log.e("Bitmap", "Failed to load image.", fne);
+            return null;
+        } catch (Exception e) {
+            Log.e("Bitmap", "Failed to load image.", e);
+            return null;
+        } finally {
+            try {
+                input.close();
+            } catch (IOException ioe) {
+
+            }
+        }
     }
 }

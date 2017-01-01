@@ -25,6 +25,7 @@ public class InServeDbHelper extends SQLiteOpenHelper {
                         + ProductEntry.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + ProductEntry.NAME + " TEXT NOT NULL, "
                         + ProductEntry.SUPPLIER + " TEXT NOT NULL, "
+                        + ProductEntry.IMAGE + " TEXT , "
                         + ProductEntry.PRICE + " INTEGER NOT NULL, "
                         + ProductEntry.QUANTITY + " INTEGER NOT NULL );";
 

@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/controller"
+            android:id="@+id/image_product_detail"
+            android:src="@drawable/placeholder"
             />
         <TextView
             android:layout_width="match_parent"
@@ -96,6 +97,13 @@
                 android:textAllCaps="true"
                 />
         </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_sale"
+            android:text="@string/sale_tag"
+            />
 
 
     </LinearLayout>

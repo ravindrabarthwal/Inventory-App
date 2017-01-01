@@ -80,6 +80,9 @@ public final class InServeContract {
         public final static String SUPPLIER = "supplier";
 
 
+        public final static String IMAGE = "image";
+
+
 
     }
 
