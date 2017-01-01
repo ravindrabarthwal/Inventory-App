@@ -11,7 +11,7 @@ public final class InServeContract {
 
     /** Make sure no one instantiate the class*/
 
-    private InServeContract(){}
+    private InServeContract(){throw new AssertionError("No InServeContract instances for you!");}
 
     /**
      * The content authority for the entire contact provider
