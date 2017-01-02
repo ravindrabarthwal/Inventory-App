@@ -11,8 +11,6 @@ import me.ravindrabarthwal.inserve.data.InServeContract.ProductEntry;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.net.URI;
-
 /**
  * Created by ravologi on 12/29/2016.
  */

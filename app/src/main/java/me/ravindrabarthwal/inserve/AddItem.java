@@ -2,36 +2,24 @@ package me.ravindrabarthwal.inserve;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
-import android.provider.MediaStore;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import me.ravindrabarthwal.inserve.data.InServeContract;
 import me.ravindrabarthwal.inserve.data.InServeContract.ProductEntry;
-import me.ravindrabarthwal.inserve.data.InServeDbHelper;
 
 public class AddItem extends AppCompatActivity{
 
     private ImageView image;
     private int IMAGE_PICK = 1;
     Uri imgUri;
-    String imgPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +74,11 @@ public class AddItem extends AppCompatActivity{
         String supplier = supplierEditText.getText().toString().trim();
         String price = priceEditText.getText().toString().trim();
         String quantity = quantityEditText.getText().toString().trim();
-        String imageUri = imgUri.toString();
+        String imageUri = "android.resource://me.ravindrabarthwal.inserve/drawable/placeholder";
+
+        if (imgUri != null){
+            imageUri = imgUri.toString();
+        }
 
 
 

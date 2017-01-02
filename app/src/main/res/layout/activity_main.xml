@@ -37,7 +37,7 @@
             android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif-medium"
             android:paddingTop="16dp"
-            android:text="No Products! :("
+            android:text="No Products! :( Click Add Button."
             android:textAppearance="?android:textAppearanceMedium"/>
     </RelativeLayout>
 
@@ -47,5 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:src="@drawable/ic_control_point_white_48dp"
         android:layout_margin="@dimen/fab_margin"/>
 </RelativeLayout>

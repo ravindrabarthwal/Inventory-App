@@ -10,9 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -31,9 +28,6 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-
-import me.ravindrabarthwal.inserve.data.InServeContract;
 import me.ravindrabarthwal.inserve.data.InServeContract.ProductEntry;
 
 public class ProductDetail extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -184,15 +178,13 @@ public class ProductDetail extends AppCompatActivity implements LoaderManager.Lo
             supplierTextView.setText(supplier);
             priceTextView.setText("$"+price);
             quantityTextView.setText(quantity);
-            if(stringImageUri == null) {
-                imageView.setImageResource(R.drawable.placeholder);
-            }else {
-                try {
-                    imageView.setImageBitmap(getBitmapFromUri(Uri.parse(stringImageUri)));
-                }catch(Exception e) {
-                    throw new IllegalArgumentException("Unable to parse image uri." + e);
-                }
+
+            try{
+             imageView.setImageBitmap(getBitmapFromUri(Uri.parse(stringImageUri)));
+            }catch(Exception e) {
+                throw new IllegalArgumentException("Unable to parse image uri." + e);
             }
+
             Button btn = (Button) findViewById(R.id.btn_sale);
             final int quantityInt = Integer.parseInt(quantity);
             if(quantityInt < 10){
